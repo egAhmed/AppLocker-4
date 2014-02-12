@@ -43,12 +43,12 @@ public class MainActivity extends Activity implements OnClickListener
 		switch (v.getId())
 		{
 		case R.id.btn_start:
-//			startService(new Intent(this, AppLockService.class));
-			startService(new Intent("com.nukeguys.applocker.lockerService"));
+			startService(new Intent(this, AppLockService.class));
+//			startService(new Intent("com.nukeguys.applocker.lockerService"));
 			break;
 		case R.id.btn_stop:
-//			stopService(new Intent(this, AppLockService.class));
-			stopService(new Intent("com.nukeguys.applocker.lockerService"));
+			stopService(new Intent(this, AppLockService.class));
+//			stopService(new Intent("com.nukeguys.applocker.lockerService"));
 			break;
 		}
 	}

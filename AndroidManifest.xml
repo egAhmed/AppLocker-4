@@ -38,11 +38,12 @@
         </service>
 
         <receiver
-            android:name="com.nukeguys.applocker.AppLockBroadcastReceiver"
+            android:name="com.nukeguys.applocker.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="true" >
-            <intent-filter>
+            <intent-filter android:priority="999999">
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
             </intent-filter>
         </receiver>
     </application>

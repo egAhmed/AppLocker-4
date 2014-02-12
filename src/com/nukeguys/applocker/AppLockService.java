@@ -62,7 +62,6 @@ public class AppLockService extends Service
 		List<String> initialProcNames = new ArrayList<String>();
 		List<String> excludeProcNames;
 		
-		
 		public LockerThread(List<String> excludeProcNames) 
 		{
 			this.excludeProcNames = excludeProcNames;
@@ -112,7 +111,7 @@ public class AppLockService extends Service
 		
 		private boolean isLockProcess(String procName)
 		{
-			if(!isInitialProcess(procName) && !isExcludeProcess(procName))
+			if(!isExcludeProcess(procName) && !isInitialProcess(procName))
 				return true;
 			return false;
 		}
@@ -133,29 +132,34 @@ public class AppLockService extends Service
 			while(!isInterrupted)
 			{
 				List<String> curProcNames = getRunningAppProcesseNames(RunningAppProcessInfo.IMPORTANCE_FOREGROUND);
-					
-				for(String procName : curProcNames)
+				
+				List<String> relative = new ArrayList<String>(curProcNames);
+				relative.removeAll(excludeProcNames);
+				if (relative.size() == curProcNames.size())	// not exist intersection
 				{
-					if(isLockProcess(procName))
+					for(String procName : curProcNames)
 					{
-						Log.i("APP LOCKER", procName + " process locked!");
-						//activityManager.killBackgroundProcesses(process.processName);
-						//Process.sendSignal(process.pid, Process.SIGNAL_KILL);
-			
-						//홈화면으로 이동시킴
-						Intent homeIntent = new Intent();
-						homeIntent.setAction(Intent.ACTION_MAIN);
-						homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						homeIntent.addCategory(Intent.CATEGORY_HOME);
-						startActivity(homeIntent);
-						
-						// Locker 실행
-						Intent intent = new Intent(AppLockService.this, MainActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(intent);
-						
-						break;
-					 }
+						if(!isInitialProcess(procName))
+						{
+							Log.i("APP LOCKER", procName + " process locked!");
+							//activityManager.killBackgroundProcesses(process.processName);
+							//Process.sendSignal(process.pid, Process.SIGNAL_KILL);
+				
+							//홈화면으로 이동시킴
+							Intent homeIntent = new Intent();
+							homeIntent.setAction(Intent.ACTION_MAIN);
+							homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							homeIntent.addCategory(Intent.CATEGORY_HOME);
+							startActivity(homeIntent);
+							
+							// Locker 실행
+							Intent intent = new Intent(AppLockService.this, MainActivity.class);
+							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							startActivity(intent);
+							
+							break;
+						 }
+					}
 				}
 				Log.i("APP LOCKER", "================== CYCLE ====================");
 				
