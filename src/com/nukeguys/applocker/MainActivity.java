@@ -1,20 +1,23 @@
 package com.nukeguys.applocker;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.http.Header;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 public class MainActivity extends Activity implements OnClickListener
 {
-	private Button	btnStart;
-	private Button	btnStop;
+	private Button btnLogin;
 	
 	private AppLockerDbAdapter dbAdapter;
 
@@ -24,11 +27,8 @@ public class MainActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		btnStart = (Button) findViewById(R.id.btn_start);
-		btnStop = (Button) findViewById(R.id.btn_stop);
-
-		btnStart.setOnClickListener(this);
-		btnStop.setOnClickListener(this);
+		btnLogin = (Button)findViewById(R.id.btn_login);
+		btnLogin.setOnClickListener(this);
 		
 		ArrayList<String> excludeProcNames = new ArrayList<String>();
 		excludeProcNames.add(getPackageName());
@@ -49,30 +49,34 @@ public class MainActivity extends Activity implements OnClickListener
 	}
 
 	@Override
-	protected void onStart()
-	{
-		super.onStart();
-	}
-
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-	}
-
-	@Override
 	public void onClick(View v)
 	{
-		switch (v.getId())
+		switch(v.getId())
 		{
-		case R.id.btn_start:
-			startService(new Intent(this, AppLockService.class));
-			// startService(new Intent("com.nukeguys.applocker.lockerService"));
-			break;
-		case R.id.btn_stop:
-			stopService(new Intent(this, AppLockService.class));
-			// stopService(new Intent("com.nukeguys.applocker.lockerService"));
+		case R.id.btn_login:
+			AppLockerRestClient.get("", null, responseHandler);
 			break;
 		}
 	}
+	
+	private AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler()
+	{
+		@Override
+        public void onStart() 
+		{
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] response) 
+        {
+        	Log.i("ALL LOCKER", "res: " + new String(response));
+        	Intent intent = new Intent(MainActivity.this, ManageServiceActivity.class);
+        	startActivity(intent);
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) 
+        {
+        }
+	};
 }

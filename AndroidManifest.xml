@@ -9,7 +9,8 @@
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -41,11 +42,16 @@
             android:name="com.nukeguys.applocker.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="true" >
-            <intent-filter android:priority="999999">
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+            <intent-filter android:priority="999999" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.nukeguys.applocker.ManageServiceActivity"
+            android:label="@string/title_activity_manage_service" >
+        </activity>
     </application>
 
 </manifest>
