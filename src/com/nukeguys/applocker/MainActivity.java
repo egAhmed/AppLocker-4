@@ -8,10 +8,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -69,9 +69,11 @@ public class MainActivity extends Activity implements OnClickListener
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] response) 
         {
-        	Log.i("ALL LOCKER", "res: " + new String(response));
+        	Toast.makeText(MainActivity.this, "Login Sueccess!!",  Toast.LENGTH_SHORT).show();
+//        	Log.i("ALL LOCKER", "res: " + new String(response));
         	Intent intent = new Intent(MainActivity.this, ManageServiceActivity.class);
         	startActivity(intent);
+        	finish();
         }
 
         @Override
